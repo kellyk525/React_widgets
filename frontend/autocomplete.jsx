@@ -9,6 +9,7 @@ class AutoComplete extends React.Component {
         }
 
         this.handleAuto = this.handleAuto.bind(this);
+        this.handleText = this.handleText.bind(this);
     }
 
     handleText() {
@@ -18,7 +19,6 @@ class AutoComplete extends React.Component {
     }
 
     handleAuto(name) {
-        debugger
         return (e) => {
             this.setState({ inputVal: name }, () => console.log(this.state.inputVal) )
         }
@@ -28,24 +28,27 @@ class AutoComplete extends React.Component {
         const names = this.props.names;
         console.log(this.state.inputVal);
 
-        const result = names.filter((name, i) => {
+        const filtered = names.filter((name, i) => {
             if (this.state.inputVal === "") {
-                return (
-                    <li key={i} onClick={ () => this.handleAuto(name) }> {name}</li>
-                )
+                return name;
             } else if (name.toLowerCase().includes(this.state.inputVal.toLowerCase())) {
-                return (
-                    <li key={i} onClick={ () => this.handleAuto(name) } > { name }</li>
-                )
+                return name;
             }
+        })
+
+        const wrapped = filtered.map((word, i) => {
+            return (
+                <li key={i} onClick={ this.handleAuto(word) }>
+                    { word }
+                </li>
+            )
         })
 
         return (
             <div>
-                HELLO
                 <input type="text" onChange={ this.handleText() } value={ this.state.inputVal } />
                 <ul>
-                    { result }
+                    { wrapped }
                 </ul>
             </div>
         )
